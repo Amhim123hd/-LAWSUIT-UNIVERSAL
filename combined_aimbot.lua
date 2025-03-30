@@ -3029,13 +3029,38 @@ print("Script created by /LAWSUIT - All rights reserved")
 -- Add creator name to GUI title
 gui:set_title("Mercury | Created by /LAWSUIT")
 
--- Add visible attribution on main screen
-local creatorLabel = Drawing.new("Text")
-creatorLabel.Text = "Script by /LAWSUIT"
-creatorLabel.Size = 16
-creatorLabel.Color = Color3.fromRGB(255, 255, 0) -- Yellow text
-creatorLabel.Center = false
-creatorLabel.Outline = true
-creatorLabel.OutlineColor = Color3.new(0, 0, 0)
-creatorLabel.Position = Vector2.new(10, 10)
-creatorLabel.Visible = true
+-- Optimize visible attribution - Create on demand rather than always
+local creatorLabel = nil
+local function setupCreatorLabel()
+    if not creatorLabel then
+        creatorLabel = Drawing.new("Text")
+        creatorLabel.Text = "Script by /LAWSUIT"
+        creatorLabel.Size = 16
+        creatorLabel.Color = Color3.fromRGB(255, 255, 0)
+        creatorLabel.Center = false
+        creatorLabel.Outline = true
+        creatorLabel.OutlineColor = Color3.new(0, 0, 0)
+        creatorLabel.Position = Vector2.new(10, 10)
+        creatorLabel.Visible = true
+    end
+end
+
+-- Call setup function when needed
+setupCreatorLabel()
+
+-- Add script cleanup handler
+game:GetService("Players").LocalPlayer.CharacterRemoving:Connect(function()
+    if creatorLabel then
+        creatorLabel.Visible = false
+    end
+end)
+
+-- Create a notification that requires acknowledgment
+gui:prompt{
+    Title = "SCRIPT CREATOR",
+    Text = "This script was created by /LAWSUIT\nAll rights reserved.",
+    Buttons = {"OK"},
+    Callback = function()
+        print("User acknowledged /LAWSUIT as creator")
+    end
+}
