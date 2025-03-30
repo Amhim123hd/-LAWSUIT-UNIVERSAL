@@ -14,10 +14,8 @@ A comprehensive Roblox aimbot and ESP script with multiple features:
 Copy and paste this loadstring into your executor:
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Amhim123hd/YOUR_REPOSITORY/main/combined_aimbot.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Amhim123hd/-LAWSUIT-UNIVERSAL/main/combined_aimbot.lua"))()
 ```
-
-Replace `YOUR_REPOSITORY` with your actual repository name.
 
 ## Controls
 - Right Mouse Button (by default): Activate aimbot
