@@ -3021,3 +3021,7 @@ end
 
 -- Expose this function globally
 _G.OptimizeGraphics = getgenv().OptimizeGraphics
+
+-- Script created by /LAWSUIT
+getgenv().ScriptCreator = "/LAWSUIT"
+print("Script created by /LAWSUIT - All rights reserved")
