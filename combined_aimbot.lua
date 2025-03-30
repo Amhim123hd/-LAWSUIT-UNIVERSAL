@@ -2505,3 +2505,442 @@ end)
 Box2DSection:Slider("Max Text Size", 10, 50, 30, function(value)
     ESP.MaxTextSize = value
 end)
+
+-- After the ESP tab section, add a new Optimized tab
+
+-- Create a new Optimized tab
+local optimizedTab = gui:tab{
+    Icon = "rbxassetid://7734053495", -- Performance icon
+    Name = "Optimized"
+}
+
+-- Create FPS Boost section
+local fpsBoostSection = optimizedTab:section{
+    Name = "FPS Boost Settings",
+    Side = "left"
+}
+
+-- Initialize settings in the script's framework
+local FPS_Settings = {
+    Graphics = true,
+    Lighting = true,
+    Texture = true,
+    Terrain = true,
+    Effects = false
+}
+
+-- Add toggles for each optimization category
+fpsBoostSection:toggle{
+    Name = "Graphics Optimization",
+    Description = "Reduces graphics quality for better performance",
+    Default = true,
+    Callback = function(value)
+        FPS_Settings.Graphics = value
+    end
+}
+
+fpsBoostSection:toggle{
+    Name = "Lighting Optimization",
+    Description = "Disables shadows and advanced lighting effects",
+    Default = true,
+    Callback = function(value)
+        FPS_Settings.Lighting = value
+    end
+}
+
+fpsBoostSection:toggle{
+    Name = "Texture Optimization",
+    Description = "Simplifies textures and models",
+    Default = true,
+    Callback = function(value)
+        FPS_Settings.Texture = value
+    end
+}
+
+fpsBoostSection:toggle{
+    Name = "Terrain Optimization",
+    Description = "Simplifies terrain and water effects",
+    Default = true,
+    Callback = function(value)
+        FPS_Settings.Terrain = value
+    end
+}
+
+fpsBoostSection:toggle{
+    Name = "Effects Optimization",
+    Description = "Disables particle effects and visual enhancements",
+    Default = false,
+    Callback = function(value)
+        FPS_Settings.Effects = value
+    end
+}
+
+-- Add Apply button
+fpsBoostSection:button{
+    Name = "APPLY OPTIMIZATIONS",
+    Description = "Apply selected FPS optimizations (may cause visual changes)",
+    Callback = function()
+        -- Set global settings
+        _G.fps_Settings = FPS_Settings
+        
+        -- Apply optimizations based on selected settings
+        local sethiddenproperty = sethiddenproperty or set_hidden_property or set_hidden_prop
+        local Lighting = game:GetService("Lighting")
+        local Terrain = workspace.Terrain
+        
+        -- Graphics optimizations
+        if FPS_Settings.Graphics and settings then
+            local RenderSettings = settings():GetService("RenderSettings")
+            local UserGameSettings = UserSettings():GetService("UserGameSettings")
+            
+            RenderSettings.EagerBulkExecution = false
+            RenderSettings.QualityLevel = Enum.QualityLevel.Level01
+            RenderSettings.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+            UserGameSettings.SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
+            workspace.InterpolationThrottling = Enum.InterpolationThrottlingMode.Enabled
+            
+            gui:notification{
+                Title = "Graphics Optimized",
+                Text = "Graphics settings have been lowered for better performance",
+                Duration = 3
+            }
+        end
+        
+        -- Lighting optimizations
+        if FPS_Settings.Lighting then
+            Lighting.GlobalShadows = false
+            Lighting.FogEnd = 1e9
+            
+            if sethiddenproperty then
+                pcall(sethiddenproperty, Lighting, "Technology", Enum.Technology.Compatibility)
+            end
+            
+            gui:notification{
+                Title = "Lighting Optimized",
+                Text = "Shadows and lighting effects have been simplified",
+                Duration = 3
+            }
+        end
+        
+        -- Texture optimizations
+        if FPS_Settings.Texture then
+            workspace.LevelOfDetail = Enum.ModelLevelOfDetail.Disabled
+            
+            if sethiddenproperty then
+                pcall(sethiddenproperty, workspace, "MeshPartHeads", Enum.MeshPartHeads.Disabled)
+            end
+            
+            gui:notification{
+                Title = "Textures Optimized",
+                Text = "Textures and models have been simplified",
+                Duration = 3
+            }
+        end
+        
+        -- Terrain optimizations
+        if FPS_Settings.Terrain then
+            Terrain.WaterWaveSize = 0
+            Terrain.WaterWaveSpeed = 0
+            Terrain.WaterReflectance = 0
+            Terrain.WaterTransparency = 0
+            
+            if sethiddenproperty then
+                pcall(sethiddenproperty, Terrain, "Decoration", false)
+            end
+            
+            gui:notification{
+                Title = "Terrain Optimized",
+                Text = "Terrain and water effects have been simplified",
+                Duration = 3
+            }
+        end
+        
+        -- Apply optimizations to game objects
+        local optimizedCount = 0
+        
+        -- Process in batches to avoid script timeout
+        local function ProcessBatch(objects, startIdx, batchSize)
+            local endIdx = math.min(startIdx + batchSize - 1, #objects)
+            
+            for i = startIdx, endIdx do
+                local Object = objects[i]
+                
+                if Object:IsA("Sky") and FPS_Settings.Texture then
+                    Object.StarCount = 0
+                    Object.CelestialBodiesShown = false
+                    optimizedCount = optimizedCount + 1
+                elseif Object:IsA("BasePart") and FPS_Settings.Texture then
+                    Object.Material = "SmoothPlastic"
+                    optimizedCount = optimizedCount + 1
+                elseif Object:IsA("BasePart") and FPS_Settings.Lighting then
+                    Object.CastShadow = false
+                    optimizedCount = optimizedCount + 1
+                elseif Object:IsA("Atmosphere") and FPS_Settings.Lighting then
+                    Object.Density = 0
+                    Object.Offset = 0
+                    Object.Glare = 0
+                    Object.Haze = 0
+                    optimizedCount = optimizedCount + 1
+                elseif Object:IsA("SurfaceAppearance") and FPS_Settings.Texture then
+                    Object:Destroy()
+                    optimizedCount = optimizedCount + 1
+                elseif (Object:IsA("Decal") or Object:IsA("Texture")) and string.lower(Object.Parent.Name) ~= "head" and FPS_Settings.Texture then
+                    Object.Transparency = 1
+                    optimizedCount = optimizedCount + 1
+                elseif (Object:IsA("ParticleEmitter") or Object:IsA("Sparkles") or Object:IsA("Smoke") or Object:IsA("Trail") or Object:IsA("Fire")) and FPS_Settings.Effects then
+                    Object.Enabled = false
+                    optimizedCount = optimizedCount + 1
+                elseif (Object:IsA("ColorCorrectionEffect") or Object:IsA("DepthOfFieldEffect") or Object:IsA("SunRaysEffect") or Object:IsA("BloomEffect") or Object:IsA("BlurEffect")) and FPS_Settings.Lighting then
+                    Object.Enabled = false
+                    optimizedCount = optimizedCount + 1
+                end
+            end
+            
+            -- If there are more objects to process, schedule the next batch
+            if endIdx < #objects then
+                gui:set_status("Optimizing: " .. math.floor((endIdx / #objects) * 100) .. "% complete")
+                task.defer(function()
+                    ProcessBatch(objects, endIdx + 1, batchSize)
+                end)
+            else
+                gui:notification{
+                    Title = "Optimization Complete",
+                    Text = "Optimized " .. optimizedCount .. " objects for better performance",
+                    Duration = 5
+                }
+                gui:set_status("Optimization complete - Optimized " .. optimizedCount .. " objects")
+            end
+        end
+        
+        -- Start processing in batches
+        gui:set_status("Starting optimization process...")
+        local allObjects = game:GetDescendants()
+        ProcessBatch(allObjects, 1, 1000) -- Process 1000 objects at a time
+    end
+}
+
+-- Add a reset button
+fpsBoostSection:button{
+    Name = "RESET GAME GRAPHICS",
+    Description = "Attempts to restore default graphics (requires rejoin for full reset)",
+    Callback = function()
+        gui:notification{
+            Title = "Graphics Reset",
+            Text = "Attempting to restore default graphics. Some changes require rejoining.",
+            Duration = 5
+        }
+        
+        -- Try to reset some settings
+        if settings then
+            local RenderSettings = settings():GetService("RenderSettings")
+            local UserGameSettings = UserSettings():GetService("UserGameSettings")
+            
+            RenderSettings.QualityLevel = Enum.QualityLevel.Level21
+            RenderSettings.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+            UserGameSettings.SavedQualityLevel = Enum.SavedQualitySetting.Automatic
+        end
+        
+        -- Reset workspace settings
+        workspace.LevelOfDetail = Enum.ModelLevelOfDetail.Automatic
+        workspace.InterpolationThrottling = Enum.InterpolationThrottlingMode.Default
+        
+        -- Reset lighting
+        local Lighting = game:GetService("Lighting")
+        Lighting.GlobalShadows = true
+        Lighting.FogEnd = 10000
+        
+        -- Reset terrain
+        local Terrain = workspace.Terrain
+        Terrain.WaterWaveSize = 0.15
+        Terrain.WaterWaveSpeed = 10
+        Terrain.WaterReflectance = 1
+        Terrain.WaterTransparency = 0.3
+        
+        gui:set_status("Graphics partially reset - rejoin for full reset")
+    end
+}
+
+-- Add FPS counter section
+local fpsCounterSection = optimizedTab:section{
+    Name = "Performance Monitor",
+    Side = "right"
+}
+
+-- Create FPS counter
+local fpsLabel = nil
+local fpsEnabled = false
+local fpsUpdateConnection = nil
+
+fpsCounterSection:toggle{
+    Name = "Show FPS Counter",
+    Description = "Displays your current frames per second",
+    Default = false,
+    Callback = function(value)
+        fpsEnabled = value
+        
+        if value then
+            -- Create FPS counter if it doesn't exist
+            if not fpsLabel then
+                fpsLabel = Drawing.new("Text")
+                fpsLabel.Visible = true
+                fpsLabel.Size = 18
+                fpsLabel.Color = Color3.fromRGB(0, 255, 0)
+                fpsLabel.Text = "FPS: Calculating..."
+                fpsLabel.Position = Vector2.new(10, 10)
+                fpsLabel.Outline = true
+                fpsLabel.OutlineColor = Color3.fromRGB(0, 0, 0)
+                fpsLabel.Font = 3 -- System font
+            else
+                fpsLabel.Visible = true
+            end
+            
+            -- Start FPS tracking
+            local lastFrame = tick()
+            local frameCount = 0
+            local fps = 60
+            
+            if fpsUpdateConnection then
+                fpsUpdateConnection:Disconnect()
+            end
+            
+            fpsUpdateConnection = RunService.RenderStepped:Connect(function()
+                frameCount = frameCount + 1
+                local now = tick()
+                
+                if (now - lastFrame) >= 1 then
+                    fps = frameCount
+                    frameCount = 0
+                    lastFrame = now
+                    
+                    -- Update FPS display with color based on performance
+                    if fps >= 45 then
+                        fpsLabel.Color = Color3.fromRGB(0, 255, 0) -- Green for good FPS
+                    elseif fps >= 30 then
+                        fpsLabel.Color = Color3.fromRGB(255, 255, 0) -- Yellow for medium FPS
+                    else
+                        fpsLabel.Color = Color3.fromRGB(255, 0, 0) -- Red for poor FPS
+                    end
+                    
+                    fpsLabel.Text = "FPS: " .. fps
+                end
+            end)
+        else
+            -- Hide FPS counter
+            if fpsLabel then
+                fpsLabel.Visible = false
+            end
+            
+            -- Disconnect FPS tracking
+            if fpsUpdateConnection then
+                fpsUpdateConnection:Disconnect()
+                fpsUpdateConnection = nil
+            end
+        end
+    end
+}
+
+-- Position selector for FPS counter
+fpsCounterSection:dropdown{
+    Name = "Counter Position",
+    Description = "Change the position of the FPS counter",
+    Default = "Top Left",
+    Content = {"Top Left", "Top Right", "Bottom Left", "Bottom Right"},
+    Callback = function(value)
+        if not fpsLabel then return end
+        
+        local screenSize = Camera.ViewportSize
+        
+        if value == "Top Left" then
+            fpsLabel.Position = Vector2.new(10, 10)
+        elseif value == "Top Right" then
+            fpsLabel.Position = Vector2.new(screenSize.X - 100, 10)
+        elseif value == "Bottom Left" then
+            fpsLabel.Position = Vector2.new(10, screenSize.Y - 30)
+        elseif value == "Bottom Right" then
+            fpsLabel.Position = Vector2.new(screenSize.X - 100, screenSize.Y - 30)
+        end
+    end
+}
+
+-- Color selector for FPS counter
+fpsCounterSection:color_picker{
+    Name = "Counter Color",
+    Description = "Change the text color of the FPS counter",
+    Default = Color3.fromRGB(0, 255, 0),
+    Callback = function(color)
+        if fpsLabel then
+            fpsLabel.Color = color
+        end
+    end
+}
+
+-- Add memory usage monitor
+local memLabel = nil
+local memEnabled = false
+local memUpdateConnection = nil
+
+fpsCounterSection:toggle{
+    Name = "Show Memory Usage",
+    Description = "Displays your current memory usage",
+    Default = false,
+    Callback = function(value)
+        memEnabled = value
+        
+        if value then
+            -- Create memory counter if it doesn't exist
+            if not memLabel then
+                memLabel = Drawing.new("Text")
+                memLabel.Visible = true
+                memLabel.Size = 18
+                memLabel.Color = Color3.fromRGB(255, 255, 255)
+                memLabel.Text = "Memory: Calculating..."
+                memLabel.Position = Vector2.new(10, 30)
+                memLabel.Outline = true
+                memLabel.OutlineColor = Color3.fromRGB(0, 0, 0)
+                memLabel.Font = 3 -- System font
+            else
+                memLabel.Visible = true
+            end
+            
+            -- Start memory tracking
+            if memUpdateConnection then
+                memUpdateConnection:Disconnect()
+            end
+            
+            memUpdateConnection = RunService.RenderStepped:Connect(function()
+                -- Update every second is enough for memory display
+                if tick() % 1 < 0.1 then
+                    local memory = math.floor(game:GetService("Stats"):GetTotalMemoryUsageMb())
+                    
+                    -- Update memory display with color based on usage
+                    if memory < 1000 then
+                        memLabel.Color = Color3.fromRGB(0, 255, 0) -- Green for low memory
+                    elseif memory < 2000 then
+                        memLabel.Color = Color3.fromRGB(255, 255, 0) -- Yellow for medium memory
+                    else
+                        memLabel.Color = Color3.fromRGB(255, 0, 0) -- Red for high memory
+                    end
+                    
+                    memLabel.Text = "Memory: " .. memory .. " MB"
+                end
+            end)
+        else
+            -- Hide memory counter
+            if memLabel then
+                memLabel.Visible = false
+            end
+            
+            -- Disconnect memory tracking
+            if memUpdateConnection then
+                memUpdateConnection:Disconnect()
+                memUpdateConnection = nil
+            end
+        end
+    end
+}
+
+gui:notification{
+    Title = "Optimization Tab Added",
+    Text = "New Optimized tab available with FPS boost features!",
+    Duration = 5
+}
