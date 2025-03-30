@@ -3064,3 +3064,142 @@ gui:prompt{
         print("User acknowledged /LAWSUIT as creator")
     end
 }
+
+-- Debug Mode Implementation
+local debugMode = {
+    Enabled = false,
+    DisableVisualEffects = true,
+    DisableBackgroundProcessing = true,
+    DisableLogging = false,
+    LowMemoryMode = false
+}
+
+-- Function to toggle debug features
+local function ApplyDebugMode()
+    if debugMode.Enabled then
+        print("[DEBUG] Debug mode enabled - optimizing performance")
+        
+        -- Disable visual effects if selected
+        if debugMode.DisableVisualEffects then
+            -- Hide non-essential visual elements
+            if creatorLabel then creatorLabel.Visible = false end
+            
+            -- Reduce ESP features if ESP is present
+            if ESP then
+                ESP.ShowTracers = false
+                ESP.ShowNames = false
+                if ESP.Box2D then ESP.Box2D.Enabled = false end
+                if ESP.SkeleESP then ESP.SkeleESP.Enabled = false end
+            end
+            
+            -- Reduce FOV visual elements
+            setrenderproperty(aimbot.FOVCircleOutline, "Visible", false)
+            setrenderproperty(aimbot.TracerLine, "Visible", false)
+        end
+        
+        -- Disable background processing
+        if debugMode.DisableBackgroundProcessing then
+            -- Reduce update frequency for non-critical features
+            cleanupInterval = 120 -- Increase memory cleanup interval
+        end
+        
+        -- Enable low memory mode
+        if debugMode.LowMemoryMode then
+            -- Force memory cleanup
+            for i = 1, 10 do
+                game:GetService("Debris"):AddItem(Instance.new("Frame"), 0)
+            end
+            
+            -- Clear textures from memory
+            for _, v in pairs(game:GetDescendants()) do
+                if v:IsA("BasePart") or v:IsA("Decal") or v:IsA("Texture") then
+                    task.spawn(function()
+                        pcall(function() v.Transparency = v.Transparency end)
+                    end)
+                end
+            end
+        end
+        
+        gui:set_status("Debug Mode: Enabled - Performance Optimized")
+    else
+        print("[DEBUG] Debug mode disabled - restoring features")
+        
+        -- Restore visual elements
+        if creatorLabel then creatorLabel.Visible = true end
+        
+        -- Restore original cleanup interval
+        cleanupInterval = 60
+        
+        gui:set_status("Debug Mode: Disabled - All Features Restored")
+    end
+end
+
+-- Add a Debug section to the Optimized tab
+local debugSection = optimizedTab:section{
+    Name = "Debug Mode",
+    Side = "right" 
+}
+
+-- Add toggle for main debug mode
+debugSection:toggle{
+    Name = "Enable Debug Mode",
+    Description = "Disable non-essential features for better performance",
+    Default = false,
+    Callback = function(value)
+        debugMode.Enabled = value
+        ApplyDebugMode()
+    end
+}
+
+-- Add toggles for specific debug features
+debugSection:toggle{
+    Name = "Disable Visual Effects",
+    Description = "Turn off non-essential visual elements",
+    Default = true,
+    Callback = function(value)
+        debugMode.DisableVisualEffects = value
+        if debugMode.Enabled then ApplyDebugMode() end
+    end
+}
+
+debugSection:toggle{
+    Name = "Background Processing",
+    Description = "Reduce frequency of background tasks",
+    Default = true,
+    Callback = function(value)
+        debugMode.DisableBackgroundProcessing = value
+        if debugMode.Enabled then ApplyDebugMode() end
+    end
+}
+
+debugSection:toggle{
+    Name = "Low Memory Mode",
+    Description = "Aggressively reduce memory usage",
+    Default = false,
+    Callback = function(value)
+        debugMode.LowMemoryMode = value
+        if debugMode.Enabled then ApplyDebugMode() end
+    end
+}
+
+debugSection:button{
+    Name = "FORCE FULL OPTIMIZATION",
+    Description = "Immediately apply all optimization techniques",
+    Callback = function()
+        -- Enable all debug options
+        debugMode.Enabled = true
+        debugMode.DisableVisualEffects = true
+        debugMode.DisableBackgroundProcessing = true
+        debugMode.LowMemoryMode = true
+        
+        -- Apply optimizations
+        ApplyDebugMode()
+        
+        -- Run graphics optimization
+        if getgenv().OptimizeGraphics then
+            getgenv().OptimizeGraphics()
+        end
+        
+        gui:set_status("Maximum optimization applied")
+    end
+}
