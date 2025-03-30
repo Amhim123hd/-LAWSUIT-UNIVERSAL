@@ -2483,46 +2483,10 @@ SkeleESPSection:button{
 }
 
 -- Initialize optimize tab
-local optimizeTab = gui:tab{
-    Name = "Optimize",
-    Description = "Performance optimization settings"
-}
+local optimizeTab = nil -- Removed tab
 
-local performanceSection = optimizeTab:section{
-    Name = "Performance Settings",
-    Description = "Adjust these settings to optimize performance"
-}
-
-performanceSection:toggle{
-    Name = "Low Quality Mode",
-    Description = "Reduce visual effects for better performance",
-    Default = false,
-    Callback = function(value)
-        -- Implement low quality mode logic
-    end
-}
-
-performanceSection:toggle{
-    Name = "Disable Effects",
-    Description = "Disable all visual effects",
-    Default = false,
-    Callback = function(value)
-        -- Implement effects toggle logic
-    end
-}
-
-performanceSection:slider{
-    Name = "Update Rate",
-    Description = "How often to update visual elements (lower = better performance)",
-    Min = 1,
-    Max = 60,
-    Default = 30,
-    Callback = function(value)
-        -- Implement update rate logic
-    end
-}
-
--- Old optimize tab removed to avoid duplication
+-- This section has been removed
+local performanceSection = nil
 
 -- Print confirmation
 print("[COMBINED AIMBOT] Script loaded successfully - Check console for optimization options")
