@@ -3025,3 +3025,17 @@ _G.OptimizeGraphics = getgenv().OptimizeGraphics
 -- Script created by /LAWSUIT
 getgenv().ScriptCreator = "/LAWSUIT"
 print("Script created by /LAWSUIT - All rights reserved")
+
+-- Add creator name to GUI title
+gui:set_title("Mercury | Created by /LAWSUIT")
+
+-- Add visible attribution on main screen
+local creatorLabel = Drawing.new("Text")
+creatorLabel.Text = "Script by /LAWSUIT"
+creatorLabel.Size = 16
+creatorLabel.Color = Color3.fromRGB(255, 255, 0) -- Yellow text
+creatorLabel.Center = false
+creatorLabel.Outline = true
+creatorLabel.OutlineColor = Color3.new(0, 0, 0)
+creatorLabel.Position = Vector2.new(10, 10)
+creatorLabel.Visible = true
