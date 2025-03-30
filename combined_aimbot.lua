@@ -3203,3 +3203,264 @@ debugSection:button{
         gui:set_status("Maximum optimization applied")
     end
 }
+
+-- Enhanced performance optimization function
+local function OptimizeGraphicsEnhanced()
+    print("[OPTIMIZE+] Running enhanced performance optimization...")
+    
+    -- Basic Workspace Optimizations
+    workspace.StreamingEnabled = false
+    workspace.TerrainDecoration = false
+    workspace.DistributedGameTime = 0
+    
+    -- Lighting Optimizations
+    local Lighting = game:GetService("Lighting")
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 100000
+    Lighting.Brightness = 1
+    
+    -- Remove all post-processing effects
+    for _, effect in pairs(Lighting:GetChildren()) do
+        if effect:IsA("PostEffect") then
+            effect.Enabled = false
+        end
+    end
+    
+    -- Terrain Optimization
+    local Terrain = workspace.Terrain
+    Terrain.WaterWaveSize = 0
+    Terrain.WaterWaveSpeed = 0
+    Terrain.WaterReflectance = 0
+    Terrain.WaterTransparency = 0
+    
+    -- Reduce parts detail
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    
+    -- Disable unused services
+    game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
+    
+    -- Reduce physics simulations
+    settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Aggressive
+    settings().Physics.AllowSleep = true
+    settings().Physics.DisableCSGv2 = true
+    
+    -- Reduce memory usage
+    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+    settings().Rendering.EagerBulkExecution = false
+    
+    -- Lower graphics quality
+    UserSettings():GetService("UserGameSettings").SavedQualityLevel = Enum.SavedQualitySetting.QualityLevel1
+    
+    print("[OPTIMIZE+] Enhanced optimization complete!")
+    return "Enhanced optimization complete"
+end
+
+-- Extreme performance mode for very low-end devices
+local function ExtremeLowPerformanceMode()
+    print("[OPTIMIZE++] Activating extreme low performance mode...")
+    
+    -- Run enhanced optimizations first
+    OptimizeGraphicsEnhanced()
+    
+    -- Disable all visual effects
+    for _, instance in pairs(workspace:GetDescendants()) do
+        if instance:IsA("ParticleEmitter") or 
+           instance:IsA("Smoke") or 
+           instance:IsA("Fire") or 
+           instance:IsA("Sparkles") or 
+           instance:IsA("Trail") then
+            instance.Enabled = false
+        elseif instance:IsA("Decal") or instance:IsA("Texture") then
+            instance.Transparency = 1
+        end
+    end
+    
+    -- Set absolute minimum quality
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    
+    -- Lower rendering distance
+    settings().Rendering.MaxThrottleRatio = 1
+    settings().Rendering.MinThrottleRatio = 1
+    
+    -- Disable shadows completely
+    sethiddenproperty(Lighting, "Technology", Enum.Technology.Compatibility)
+    
+    -- Disable view models if possible
+    pcall(function()
+        for _, object in pairs(workspace.Camera:GetChildren()) do
+            if object:IsA("Model") then
+                object:Destroy()
+            end
+        end
+    end)
+    
+    -- Cancel all tweens to reduce CPU usage
+    game:GetService("TweenService"):ClearAllTweens()
+    
+    -- Reduce network throttling
+    settings().Network.IncomingReplicationLag = 0
+    
+    -- Set polling rates lower
+    settings().Network.ReceiveRate = 30
+    
+    -- Disconnect unneeded connections when in extreme performance mode
+    local disconnectedConnections = {}
+    
+    -- Store disconnected connections to restore later if needed
+    _G.DisconnectedConnections = disconnectedConnections
+    
+    print("[OPTIMIZE++] Extreme performance mode activated")
+    return "Extreme performance mode activated"
+end
+
+-- Minimize script impact on performance
+local function OptimizeScriptPerformance()
+    print("[SCRIPT OPTIMIZE] Optimizing script execution...")
+    
+    -- Reduce rendering updates frequency
+    if aimbot.DeveloperSettings and aimbot.DeveloperSettings.RenderRate then
+        aimbot.DeveloperSettings.RenderRate = 30 -- Lower renders per second
+    end
+    
+    -- Optimize FOV circle
+    if aimbot.FOVSettings then
+        aimbot.FOVSettings.NumSides = 12 -- Reduce polygon complexity
+    end
+    
+    -- Disable unnecessary visual effects
+    rainbowEnabled = false
+    if rainbowConnection then
+        rainbowConnection:Disconnect()
+        rainbowConnection = nil
+    end
+    
+    -- Reduce watermark impact
+    if watermark then
+        watermark.Visible = false
+    end
+    
+    if watermarkConnection then
+        watermarkConnection:Disconnect()
+        watermarkConnection = nil
+    end
+    
+    -- Disable animation effects
+    if aimbot.ActiveConnections then
+        for _, connection in ipairs(aimbot.ActiveConnections) do
+            if typeof(connection) == "RBXScriptConnection" then
+                connection:Disconnect()
+            end
+        end
+        aimbot.ActiveConnections = {}
+    end
+    
+    -- Use less frequent aim updating
+    RunService:UnbindFromRenderStep("AimbotUpdate")
+    RunService:BindToRenderStep("AimbotUpdate", 500, function()
+        -- Low frequency aimbot update
+        if aimbot and aimbot.Settings and aimbot.Settings.Enabled and aimbot.Target then
+            local target = aimbot.Target
+            if target and target.Character then
+                local targetPart = target.Character:FindFirstChild(aimbot.Settings.LockPart)
+                if targetPart then
+                    -- Simple aim without visual effects
+                    local screenPos, onScreen = Camera:WorldToScreenPoint(targetPart.Position)
+                    if onScreen then
+                        local mousePos = UserInputService:GetMouseLocation()
+                        mousemoverel((screenPos.X - mousePos.X) * 0.5, (screenPos.Y - mousePos.Y) * 0.5)
+                    end
+                end
+            end
+        end
+    end)
+    
+    print("[SCRIPT OPTIMIZE] Script optimization complete")
+    return "Script performance optimized"
+end
+
+-- Add new optimization buttons to debug section
+debugSection:button{
+    Name = "EXTREME PERFORMANCE MODE",
+    Description = "Maximum optimization for very slow devices",
+    Callback = function()
+        ExtremeLowPerformanceMode()
+        OptimizeScriptPerformance()
+        gui:set_status("⚡ Extreme performance mode enabled")
+        
+        -- Show notification
+        gui:notification{
+            Title = "Performance Mode Activated",
+            Text = "Extreme optimizations applied to reduce lag",
+            Duration = 6
+        }
+    end
+}
+
+debugSection:button{
+    Name = "OPTIMIZE SCRIPT ONLY",
+    Description = "Optimize script performance without visual changes",
+    Callback = function()
+        OptimizeScriptPerformance()
+        gui:set_status("Script optimized for better performance")
+    end
+}
+
+-- Replace the existing OptimizeGraphics function with enhanced version
+getgenv().OptimizeGraphics = OptimizeGraphicsEnhanced
+
+-- Create a ping monitor to help diagnose issues
+local pingMonitor = nil
+local pingText = nil
+
+debugSection:toggle{
+    Name = "Show Ping Monitor",
+    Description = "Display current ping/performance metrics",
+    Default = false,
+    Callback = function(value)
+        if value then
+            -- Create ping display if it doesn't exist
+            if not pingText then
+                pingText = Drawing.new("Text")
+                pingText.Size = 16
+                pingText.Color = Color3.fromRGB(255, 255, 255)
+                pingText.Outline = true
+                pingText.Center = false
+                pingText.Position = Vector2.new(10, 40)
+            end
+            
+            pingText.Visible = true
+            
+            -- Update ping display
+            if pingMonitor then
+                pingMonitor:Disconnect()
+            end
+            
+            pingMonitor = game:GetService("RunService").Heartbeat:Connect(function()
+                local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+                local fps = math.floor(1 / game:GetService("RunService").RenderStepped:Wait())
+                local memory = math.floor(game:GetService("Stats"):GetTotalMemoryUsageMb())
+                
+                pingText.Text = string.format("Ping: %d ms | FPS: %d | Memory: %d MB", ping, fps, memory)
+                
+                -- Color code based on performance
+                if ping > 200 or fps < 30 then
+                    pingText.Color = Color3.fromRGB(255, 50, 50) -- Red for bad performance
+                elseif ping > 100 or fps < 45 then
+                    pingText.Color = Color3.fromRGB(255, 255, 50) -- Yellow for moderate
+                else
+                    pingText.Color = Color3.fromRGB(50, 255, 50) -- Green for good
+                end
+            end)
+        else
+            -- Hide ping display
+            if pingText then
+                pingText.Visible = false
+            end
+            
+            if pingMonitor then
+                pingMonitor:Disconnect()
+                pingMonitor = nil
+            end
+        end
+    end
+}
