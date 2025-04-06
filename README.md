@@ -72,6 +72,12 @@ If you experience targeting issues:
 3. Check if your FOV size is appropriate for your targeting needs
 4. For 1v1 scenarios, the improved targeting system will maintain lock on your opponent
 
+## Support & Community
+
+Join our Discord server for support, updates, and to connect with other users:
+- **Discord**: [Join CODECORE Discord](https://discord.gg/5phun7Aj)
+- **Contact**: ?Lacys (Owner of CODECORE discord server)
+
 ## Credits
 
 Created by /LAWSUIT
