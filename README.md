@@ -75,7 +75,7 @@ If you experience targeting issues:
 ## Support & Community
 
 Join our Discord server for support, updates, and to connect with other users:
-- **Discord**: [Join CODECORE Discord](https://discord.gg/5phun7Aj)
+- **Discord**: [Join CODECORE Discord](https://discord.gg/5qfFah97nN)
 - **Contact**: ?Lacys (Owner of CODECORE discord server)
 
 ## Credits
