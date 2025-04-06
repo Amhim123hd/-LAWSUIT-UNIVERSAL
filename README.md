@@ -31,6 +31,12 @@ An advanced aimbot script with integrated ESP features for Roblox.
 
 ## Installation
 
+### Method 1: Loadstring (Recommended)
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Amhim123hd/-LAWSUIT-UNIVERSAL/main/combined_aimbot.lua"))()
+```
+
+### Method 2: Manual Installation
 1. Copy the entire script from `lawsuits.lua`
 2. Open your Roblox exploit executor
 3. Paste the script into your executor
