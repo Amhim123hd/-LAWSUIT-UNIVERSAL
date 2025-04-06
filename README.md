@@ -2,6 +2,12 @@
 
 An advanced aimbot script with integrated ESP features for Roblox.
 
+## Support & Community
+
+Join our Discord server for support, updates, and to connect with other users:
+- **Discord**: [Join CODECORE Discord](https://discord.gg/5qfFah97nN)
+- **Contact**: ?Lacys (Owner of CODECORE discord server)
+
 ## Features
 
 ### Aimbot
@@ -71,12 +77,6 @@ If you experience targeting issues:
 2. Verify that the target part (Head, Torso, etc.) is visible on the target
 3. Check if your FOV size is appropriate for your targeting needs
 4. For 1v1 scenarios, the improved targeting system will maintain lock on your opponent
-
-## Support & Community
-
-Join our Discord server for support, updates, and to connect with other users:
-- **Discord**: [Join CODECORE Discord](https://discord.gg/5qfFah97nN)
-- **Contact**: ?Lacys (Owner of CODECORE discord server)
 
 ## Credits
 
